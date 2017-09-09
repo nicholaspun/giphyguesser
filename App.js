@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import $ from "jquery";
+
+let API_KEY = "1da9e73147fd49008bd755b144fab994";
+
 
 export default class App extends Component {
   constructor() {
@@ -90,3 +94,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+function getImageURLfromTag(tags){
+  let url = "err"
+  tags = tags.split(" ").join("+");
+  let xhr = $.get(String.format("http://api.giphy.com/v1/gifs/search?q={0}&api_key={1}&limit={2}", tags, API_KEY, 1));
+  xhr.done(function(data) {
+     console.log("success got data", data);
+     url = data[0]['url'];
+    });
+  return url;
+}
