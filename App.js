@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity } from 'react-native';
-import $ from "jquery";
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
 const CircleButton = (props) => (
-  <TouchableOpacity style={styles.circleButton}>
+  <TouchableOpacity style={styles.circleButton} onPress={props.onPress}>
     <Icon name={props.name} color={props.color}/>
   </TouchableOpacity>
 )
@@ -18,25 +17,56 @@ export default class App extends Component {
     this.state = {
       playing: false,
       guessing: false,
-      gif: null,
+      gif: false,
+      guess: '',
       keyword: null,
       correct: false,
     }
     this.handleStart = this.handleStart.bind(this)
     this.handleKeyWordChange = this.handleKeyWordChange.bind(this)
     this.searchGif = this.searchGif.bind(this)
+    this.handleConfirmKeyword = this.handleConfirmKeyword.bind(this)
+    this.validateGuess = this.validateGuess.bind(this)
+    this.handleGuessChange = this.handleGuessChange.bind(this)
   }
 
   handleStart() {
     this.setState({playing: true});
   }
 
+  handleConfirmKeyword() {
+    this.setState({guessing: true})
+  }
+
   handleKeyWordChange(keyword) {
     this.setState({keyword: keyword});
   }
 
-  searchGif() {
+  handleGuessChange(guess) {
+    this.setState({guess: guess});
+  }
 
+  validateGuess() {
+    let result = (this.state.guess === this.state.keyword)
+    console.log(this.state.guess, this.state.keyword, result)
+    this.setState({guessing: !result, correct: result})
+  }
+
+  async searchGif() {
+    let gif = await getImageURLfromTag(this.state.keyword);
+    this.setState({gif: gif})
+  }
+
+  showGif(gif) {
+    if (gif) {
+    return(
+      <View>
+        <Image
+          source={{uri: gif.url}}
+          style={{width: Number(gif.width), height: Number(gif.height)}}/>
+      </View>
+      )
+    }
   }
 
   viewSwitcher = () => {
@@ -56,13 +86,14 @@ export default class App extends Component {
             value={this.state.keyword}
             onChangeText={this.handleKeyWordChange}
             style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
-            onEndEditing={this.state.searchGif}
+            onEndEditing={this.searchGif}
             returnKeyType={'go'}
           />
-          <View style={styles.keywordOptions}>
-            <CircleButton name='check' color='green'/>
-            <CircleButton name='refresh' color='red'/>
-          </View>
+            {this.showGif(this.state.gif)}
+            <View style={styles.keywordOptions}>
+              <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
+              <CircleButton name='refresh' color='red'/>
+            </View>
         </View>
       )
     }
@@ -76,7 +107,20 @@ export default class App extends Component {
     else {
       return (
         <View style={styles.container}>
-          <Text>Guess</Text>
+          <View>
+            <Image
+              source={{uri: this.state.gif.url}}
+              style={{width: Number(this.state.gif.width), height: Number(this.state.gif.height)}}/>
+          </View>
+          <TextInput
+            placeholder='Enter your guess'
+            placeholderTextColor='gray'
+            value={this.state.guess}
+            onChangeText={this.handleGuessChange}
+            style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+            onEndEditing={this.validateGuess}
+            returnKeyType={'go'}
+          />
         </View>
       )
     }
@@ -113,13 +157,10 @@ const styles = StyleSheet.create({
   }
 });
 
-function getImageURLfromTag(tags){
-  let url = "err"
+async function getImageURLfromTag(tags){
   tags = tags.split(" ").join("+");
-  let xhr = $.get(String.format("http://api.giphy.com/v1/gifs/search?q={0}&api_key={1}&limit={2}", tags, API_KEY, 1));
-  xhr.done(function(data) {
-     console.log("success got data", data);
-     url = data[0]['url'];
-    });
-  return url;
+  let url = `http://api.giphy.com/v1/gifs/search?q=${tags}&api_key=${API_KEY}&limit=${1}`;
+  let responseString = await fetch(url);
+  let response = await responseString.json();
+  return(response.data[0].images.original);
 }
