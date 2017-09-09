@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity } from 'react-native';
 import $ from "jquery";
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
+
+const CircleButton = (props) => (
+  <TouchableOpacity style={styles.circleButton}>
+    <Icon name={props.name} color={props.color}/>
+  </TouchableOpacity>
+)
 
 
 export default class App extends Component {
   constructor() {
     super();
-    this.state = {m
+    this.state = {
       playing: false,
       guessing: false,
       gif: null,
