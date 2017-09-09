@@ -1,28 +1,48 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      playing: true,
+      playing: false,
       guessing: false,
       keyword: null,
+      correct: false,
     }
+    this.handleStart = this.handleStart.bind(this)
+    this.handleKeyWordChange = this.handleKeyWordChange.bind(this)
+    this.searchGif = this.searchGif.bind(this)
+  }
+
+  handleStart() {
+    this.setState({playing: true});
+  }
+
+  handleKeyWordChange(keyword) {
+    this.setState({keyword: keyword});
   }
 
   viewSwitcher = () => {
     if (!this.state.playing) {
       return (
         <View style={styles.container}>
-          <Text>Start New Game</Text>
+          <Button title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
-    else if (!this.state.guessing && !this.state.keyword) {
+    else if (!this.state.guessing && !this.state.correct) {
       return (
         <View style={styles.container}>
-          <Text>Search Giphy + Set Keyword</Text>
+          <TextInput
+            defaultValue='Enter a Keyword'
+            value={this.state.keyword}
+            onChangeText={this.handleKeyWordChange}
+            style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+            onEndEditing={this.state.searchGif}
+            returnKeyType={'go'}
+          />
+          {/*<Text>Search Giphy + Set Keyword</Text>*/}
         </View>
       )
     }
@@ -42,9 +62,18 @@ export default class App extends Component {
     }
   }
 
+  _handleButtonPress = () => {
+      Alert.alert(
+        'Button pressed!',
+        'You did it!',
+      );
+    };
 
   render() {
-    return <View style={styles.container}>{this.viewSwitcher()}</View>
+    return (
+      <View style={styles.container}>{this.viewSwitcher()}
+      </View>
+    )
   }
 }
 
