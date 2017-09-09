@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const CircleButton = props => (
+  <TouchableOpacity style={styles.circleButton}>
+    <Icon name={props.name} size={30} color={props.color}/>
+  </TouchableOpacity>
+)
 
 export default class App extends Component {
   constructor() {
@@ -7,6 +14,7 @@ export default class App extends Component {
     this.state = {
       playing: false,
       guessing: false,
+      gif: null,
       keyword: null,
       correct: false,
     }
@@ -47,7 +55,10 @@ export default class App extends Component {
             onEndEditing={this.state.searchGif}
             returnKeyType={'go'}
           />
-          {/*<Text>Search Giphy + Set Keyword</Text>*/}
+          <View style={styles.keywordOptions}>
+            <CircleButton name='check' color='green'/>
+            <CircleButton name='refresh' color='red'/>
+          </View>
         </View>
       )
     }
@@ -89,4 +100,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  keywordOptions: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  circleButton: {
+    padding: 8
+  }
 });
