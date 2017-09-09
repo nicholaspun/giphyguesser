@@ -18,6 +18,8 @@ export default class App extends Component {
       playing: false,
       guessing: false,
       gif: false,
+      gifLst: false,
+      gifIndex: 0,
       guess: '',
       keyword: null,
       correct: false,
@@ -26,6 +28,7 @@ export default class App extends Component {
     this.handleKeyWordChange = this.handleKeyWordChange.bind(this)
     this.searchGif = this.searchGif.bind(this)
     this.handleConfirmKeyword = this.handleConfirmKeyword.bind(this)
+    this.handleRefreshKeyword = this.handleRefreshKeyword.bind(this)
     this.validateGuess = this.validateGuess.bind(this)
     this.handleGuessChange = this.handleGuessChange.bind(this)
   }
@@ -36,6 +39,15 @@ export default class App extends Component {
 
   handleConfirmKeyword() {
     this.setState({guessing: true})
+  }
+
+  handleRefreshKeyword() {
+    let nextIndex = this.state.gifIndex + 1;
+    if (nextIndex >= this.state.gifLst.length) {
+      nextIndex = 0;
+    }
+    console.log(this.state.gifLst.length);
+    this.setState({gif: this.state.gifLst[nextIndex].images.original, gifIndex: nextIndex});
   }
 
   handleKeyWordChange(keyword) {
@@ -53,8 +65,9 @@ export default class App extends Component {
   }
 
   async searchGif() {
-    let gif = await getImageURLfromTag(this.state.keyword);
-    this.setState({gif: gif})
+    let gifLst = await getImageURLfromTag(this.state.keyword);
+    this.setState({gifLst: gifLst});
+    this.setState({gif: gifLst[this.state.gifIndex].images.original});
   }
 
   showGif(gif) {
@@ -92,7 +105,7 @@ export default class App extends Component {
             {this.showGif(this.state.gif)}
             <View style={styles.keywordOptions}>
               <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
-              <CircleButton name='refresh' color='red'/>
+              <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
             </View>
         </View>
       )
@@ -126,13 +139,6 @@ export default class App extends Component {
     }
   }
 
-  _handleButtonPress = () => {
-      Alert.alert(
-        'Button pressed!',
-        'You did it!',
-      );
-    };
-
   render() {
     return (
       <View style={styles.container}>{this.viewSwitcher()}
@@ -159,8 +165,8 @@ const styles = StyleSheet.create({
 
 async function getImageURLfromTag(tags){
   tags = tags.split(" ").join("+");
-  let url = `http://api.giphy.com/v1/gifs/search?q=${tags}&api_key=${API_KEY}&limit=${1}`;
+  let url = `http://api.giphy.com/v1/gifs/search?q=${tags}&api_key=${API_KEY}&limit=${10}`;
   let responseString = await fetch(url);
   let response = await responseString.json();
-  return(response.data[0].images.original);
+  return(response.data);
 }
