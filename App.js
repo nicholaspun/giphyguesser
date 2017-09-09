@@ -31,13 +31,18 @@ export default class App extends Component {
     this.handleRefreshKeyword = this.handleRefreshKeyword.bind(this)
     this.validateGuess = this.validateGuess.bind(this)
     this.handleGuessChange = this.handleGuessChange.bind(this)
+    this.searchGif = this.searchGif.bind(this);
   }
 
-  handleStart() {
+  handleStart = () => {
     this.setState({playing: true});
   }
 
-  handleConfirmKeyword() {
+  newGame = () => {
+    this.setState({guessing: false, correct: false, keyword: null, gif: false})
+  }
+
+  handleConfirmKeyword = () => {
     this.setState({guessing: true})
   }
 
@@ -50,15 +55,15 @@ export default class App extends Component {
     this.setState({gif: this.state.gifLst[nextIndex].images.original, gifIndex: nextIndex});
   }
 
-  handleKeyWordChange(keyword) {
+  handleKeyWordChange = (keyword) => {
     this.setState({keyword: keyword});
   }
 
-  handleGuessChange(guess) {
+  handleGuessChange = (guess) => {
     this.setState({guess: guess});
   }
 
-  validateGuess() {
+  validateGuess = () => {
     let result = (this.state.guess === this.state.keyword)
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
@@ -113,7 +118,8 @@ export default class App extends Component {
     else if (!this.state.guessing) {
       return (
         <View style={styles.container}>
-          <Text>Keyword is Correct, null it and start new game</Text>
+          <Text style={{ "margin": 10 }}>You're Correct!</Text>
+          <Button title='Start New Game' onPress={this.newGame}/>
         </View>
       )
     }
