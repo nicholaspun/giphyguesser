@@ -23,6 +23,10 @@ export default class App extends Component {
     this.setState({keyword: keyword});
   }
 
+  searchGif() {
+
+  }
+
   viewSwitcher = () => {
     if (!this.state.playing) {
       return (
@@ -35,7 +39,8 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           <TextInput
-            defaultValue='Enter a Keyword'
+            placeholder='Enter a Keyword'
+            placeholderTextColor='gray'
             value={this.state.keyword}
             onChangeText={this.handleKeyWordChange}
             style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
