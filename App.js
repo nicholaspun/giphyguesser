@@ -46,7 +46,7 @@ export default class App extends Component {
     this.setState({guessing: true})
   }
 
-  handleRefreshKeyword() {
+  handleRefreshKeyword = () => {
     let nextIndex = this.state.gifIndex + 1;
     if (nextIndex >= this.state.gifLst.length) {
       nextIndex = 0;
@@ -81,7 +81,7 @@ export default class App extends Component {
       <View>
         <Image
           source={{uri: gif.url}}
-          style={{width: Number(gif.width), height: Number(gif.height)}}/>
+          style={{width: 200, height: 200}}/>
       </View>
       )
     }
@@ -118,7 +118,7 @@ export default class App extends Component {
     else if (!this.state.guessing) {
       return (
         <View style={styles.container}>
-          <Text style={{ "margin": 10 }}>You're Correct!</Text>
+          <Text style={{ "margin": 10 }}>You are Correct!</Text>
           <Button title='Start New Game' onPress={this.newGame}/>
         </View>
       )
@@ -129,7 +129,7 @@ export default class App extends Component {
           <View>
             <Image
               source={{uri: this.state.gif.url}}
-              style={{width: Number(this.state.gif.width), height: Number(this.state.gif.height)}}/>
+              style={{width: 200, height: 200}}/>
           </View>
           <TextInput
             placeholder='Enter your guess'
