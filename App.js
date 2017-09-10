@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -47,7 +47,6 @@ export default class App extends Component {
     if (nextIndex >= this.state.gifLst.length) {
       nextIndex = 0;
     }
-    console.log(this.state.gifLst.length);
     this.setState({gif: this.state.gifLst[nextIndex].images.original, gifIndex: nextIndex});
   }
 
@@ -102,22 +101,24 @@ export default class App extends Component {
     }
     else if (!this.state.guessing && !this.state.correct) {
       return (
-        <View style={styles.container}>
-          <TextInput
-            placeholder='Enter a Keyword'
-            placeholderTextColor='gray'
-            value={this.state.keyword}
-            onChangeText={this.handleKeyWordChange}
-            style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
-            onEndEditing={this.searchGif}
-            returnKeyType={'go'}
-          />
+        <ScrollView >
+          <View style={styles.container}>
+            <TextInput
+              placeholder='Enter a Keyword'
+              placeholderTextColor='gray'
+              value={this.state.keyword}
+              onChangeText={this.handleKeyWordChange}
+              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              onEndEditing={this.searchGif}
+              returnKeyType={'go'}
+            />
             {this.showGif(this.state.gif)}
             <View style={styles.keywordOptions}>
               <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
               <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
             </View>
-        </View>
+          </View>
+        </ScrollView>
       )
     }
     else if (!this.state.guessing) {
