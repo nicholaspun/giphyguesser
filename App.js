@@ -16,6 +16,7 @@ import {
   TouchableHighlight,
   KeyboardAvoidingView
 } from 'react-native';
+import { Font } from 'expo';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -24,6 +25,18 @@ const CircleButton = (props) => (
     <Icon name={props.name} size={30} color={props.color}/>
   </TouchableOpacity>
 )
+
+const IconButton = (props) => {
+  let possibleColours = ['#E91E63', '#850AFF', '#40C3FF', '#43A047'];
+  let randomColour = possibleColours[Math.floor(Math.random() * possibleColours.length)];
+  return (
+    <TouchableOpacity style={props.style}>
+      <Icon.Button name={props.name} backgroundColor={props.backgroundColor || randomColour} onPress={props.onPress}>
+        <Text style={{color: 'white'}}>{props.title}</Text>
+      </Icon.Button>
+    </TouchableOpacity>
+  )
+}
 
 var {height, width} = Dimensions.get('window');
 
@@ -47,6 +60,11 @@ export default class App extends Component {
     }
     this.searchGif = this.searchGif.bind(this)
   }
+  componentDidMount() {
+      Font.loadAsync({
+        'Hind': require('./assets/fonts/Hind.ttf'),
+      });
+    }
 
   handleStart = () => {
     this.setState({playing: true});
@@ -119,8 +137,8 @@ export default class App extends Component {
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
           <View style={styles.keywordOptions}>
-            <CircleButton name='check' color='green' style={styles.option} onPress={this.handleConfirmKeyword}/>
-            <CircleButton name='refresh' color='red' style={styles.option} onPress={this.handleRefreshKeyword}/>
+            <IconButton name='check' backgroundColor='#8BC34A' title='Confirm' onPress={this.handleConfirmKeyword} style={styles.option}/>
+            <IconButton name='refresh' backgroundColor='#F44336' title='Reload' onPress={this.handleRefreshKeyword} style={styles.option}/>
           </View>
       </View>
       )
@@ -145,10 +163,10 @@ export default class App extends Component {
 
   showWinner = () => {
     if (this.state.pickerWin) {
-      return <Text style={{ "margin": 10, 'color': 'white', 'fontSize': 36}}>Tag Setter Wins!</Text>
+      return <Text style={styles.heading}>Tag Setter Wins!</Text>
     }
     else {
-      return <Text style={{ "margin": 10, 'color': 'white', 'fontSize': 36}}>Tag Guessers Win!</Text>
+      return <Text style={styles.heading}>Tag Guessers Win!</Text>
     }
   }
 
@@ -157,7 +175,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
             <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+            <IconButton name='play' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
@@ -166,6 +184,7 @@ export default class App extends Component {
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           <ScrollView contentContainerStyle={styles.scrollView}>
             <View style={styles.container}>
+              <Text style={styles.heading}>How to Play</Text>
               <Text style={{ "margin": 30, 'color': 'white' }}>   Start by having the first player enter a tag for a gif, then pass the device to the other players who have 5 tries to guess the tag.</Text>
               <TextInput
                 placeholder='Enter a Keyword'
@@ -187,7 +206,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           {this.showWinner()}
-          <Button color='white' title='Restart' onPress={this.newGame}/>
+          <IconButton name='repeat' title='Restart' onPress={this.newGame}/>
         </View>
       )
     }
@@ -196,7 +215,7 @@ export default class App extends Component {
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           <ScrollView contentContainerStyle={styles.scrollView}>
             <View style={styles.container}>
-              <Text style={{ 'color': 'white', 'fontSize': 20 }}>Guesses Remaining: {this.state.guessesLeft}</Text>
+              <Text style={styles.heading}>Guesses Remaining: {this.state.guessesLeft}</Text>
               <Image
                 source={{uri: this.state.gif.url}}
                 style={{width: 200, height: 200, padding: 8, margin: 8}}/>
@@ -210,7 +229,7 @@ export default class App extends Component {
                 returnKeyType={'go'}
               />
               {this.showWrongGuess()}
-              <Button color='white' title='Restart' onPress={this.newGame} style={{margin: 25}}/>
+              <IconButton name='repeat' title='Restart' onPress={this.newGame} />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -227,6 +246,12 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+  heading: {
+    fontSize: 24,
+    fontFamily: 'Hind',
+    color: 'white',
+    margin: 10
+  },
   container: {
     flex: 1,
     backgroundColor: '#212121',
@@ -234,6 +259,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   keywordOptions: {
+    width: 200,
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -260,7 +286,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   option: {
-    flex: 1
+    flex: 1,
+    padding: 8,
+    paddingLeft: 0
   },
 });
 
