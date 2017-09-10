@@ -163,10 +163,10 @@ export default class App extends Component {
 
   showWinner = () => {
     if (this.state.pickerWin) {
-      return <Text style={styles.heading}>Giphy Chooser Wins!</Text>
+      return <Text style={styles.heading}>Tag Setter Wins!</Text>
     }
     else {
-      return <Text style={styles.heading}>Giphy Guessers Win!</Text>
+      return <Text style={styles.heading}>Tag Guessers Win!</Text>
     }
   }
 
