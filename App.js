@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Picker } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -24,6 +24,7 @@ export default class App extends Component {
       guess: '',
       keyword: null,
       correct: false,
+      player: 1,
     }
     this.searchGif = this.searchGif.bind(this)
   }
@@ -93,6 +94,15 @@ export default class App extends Component {
     }
   }
 
+  showWrongGuess = () => {
+    if (!this.state.result) {
+      <View>
+        <Text>You have guessed incorrectly!</Text>
+      </View>
+      this.setState({guess: ''});
+    }
+  }
+
   viewSwitcher = () => {
     if (!this.state.playing) {
       return (
@@ -145,6 +155,7 @@ export default class App extends Component {
               onEndEditing={this.validateGuess}
               returnKeyType={'go'}
             />
+            {this.showWrongGuess()}
           </ScrollView>
         </View>
       )
