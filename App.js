@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -24,14 +24,7 @@ export default class App extends Component {
       keyword: null,
       correct: false,
     }
-    this.handleStart = this.handleStart.bind(this)
-    this.handleKeyWordChange = this.handleKeyWordChange.bind(this)
     this.searchGif = this.searchGif.bind(this)
-    this.handleConfirmKeyword = this.handleConfirmKeyword.bind(this)
-    this.handleRefreshKeyword = this.handleRefreshKeyword.bind(this)
-    this.validateGuess = this.validateGuess.bind(this)
-    this.handleGuessChange = this.handleGuessChange.bind(this)
-    this.searchGif = this.searchGif.bind(this);
   }
 
   handleStart = () => {
@@ -51,7 +44,6 @@ export default class App extends Component {
     if (nextIndex >= this.state.gifLst.length) {
       nextIndex = 0;
     }
-    console.log(this.state.gifLst.length);
     this.setState({gif: this.state.gifLst[nextIndex].images.original, gifIndex: nextIndex});
   }
 
@@ -64,7 +56,8 @@ export default class App extends Component {
   }
 
   validateGuess = () => {
-    let result = (this.state.guess === this.state.keyword)
+    // switching them all to avoid case sensitivity
+    let result = (this.state.guess.toLowerCase === this.state.keyword.toLowerCase)
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
   }
@@ -75,7 +68,7 @@ export default class App extends Component {
     this.setState({gif: gifLst[this.state.gifIndex].images.original});
   }
 
-  showGif(gif) {
+  showGif = (gif) => {
     if (gif) {
     return(
       <View>
@@ -97,22 +90,24 @@ export default class App extends Component {
     }
     else if (!this.state.guessing && !this.state.correct) {
       return (
-        <View style={styles.container}>
-          <TextInput
-            placeholder='Enter a Keyword'
-            placeholderTextColor='gray'
-            value={this.state.keyword}
-            onChangeText={this.handleKeyWordChange}
-            style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
-            onEndEditing={this.searchGif}
-            returnKeyType={'go'}
-          />
+        <ScrollView >
+          <View style={styles.container}>
+            <TextInput
+              placeholder='Enter a Keyword'
+              placeholderTextColor='gray'
+              value={this.state.keyword}
+              onChangeText={this.handleKeyWordChange}
+              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              onEndEditing={this.searchGif}
+              returnKeyType={'go'}
+            />
             {this.showGif(this.state.gif)}
             <View style={styles.keywordOptions}>
               <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
               <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
             </View>
-        </View>
+          </View>
+        </ScrollView>
       )
     }
     else if (!this.state.guessing) {
