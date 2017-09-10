@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -11,11 +12,13 @@ const CircleButton = (props) => (
 )
 
 
+
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
       playing: false,
+      loading: false,
       guessing: false,
       gif: false,
       gifLst: false,
@@ -57,15 +60,16 @@ export default class App extends Component {
 
   validateGuess = () => {
     // switching them all to avoid case sensitivity
-    let result = (this.state.guess.toLowerCase === this.state.keyword.toLowerCase)
+    let result = (this.state.guess.toLowerCase() === this.state.keyword.toLowerCase())
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
   }
 
   async searchGif() {
+    this.setState({loading: true})
     let gifLst = await getImageURLfromTag(this.state.keyword);
     this.setState({gifLst: gifLst});
-    this.setState({gif: gifLst[this.state.gifIndex].images.original});
+    this.setState({gif: gifLst[this.state.gifIndex].images.original, loading: false});
   }
 
   showGif = (gif) => {
@@ -76,6 +80,13 @@ export default class App extends Component {
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
       </View>
+      )
+    }
+    else if (this.state.loading) {
+      return (
+        <View style={{width:200, height: 200, alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator animating={true}/>
+        </View>
       )
     }
   }
