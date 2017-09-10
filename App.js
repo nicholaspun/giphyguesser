@@ -38,9 +38,10 @@ export default class App extends Component {
       gifLst: false,
       gifIndex: 0,
       guess: '',
-      keyword: null,
+      keyword: '',
       correct: false,
       firstGuess: true,
+      firstKeyWord: true,
     }
     this.searchGif = this.searchGif.bind(this)
   }
@@ -50,7 +51,7 @@ export default class App extends Component {
   }
 
   newGame = () => {
-    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true})
+    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true, firstKeyWord: true, gifLst: false})
   }
 
   handleConfirmKeyword = () => {
@@ -87,10 +88,25 @@ export default class App extends Component {
   }
 
   async searchGif() {
-    this.setState({loading: true})
+    this.setState({loading: true});
     let gifLst = await getImageURLfromTag(this.state.keyword);
-    this.setState({gifLst: gifLst});
-    this.setState({gif: gifLst[this.state.gifIndex].images.original, loading: false});
+    console.log(gifLst);
+    if (gifLst.length) {
+      this.setState({gifLst: gifLst});
+      this.setState({gif: gifLst[this.state.gifIndex].images.original, loading: false});
+    }
+    else {
+      this.setState({loading: false});
+    }
+    this.setState({firstKeyWord: false});
+  }
+
+  showInvalidTag = () => {
+    console.log(this.state.gifLst.length);
+    if (this.state.gifLst === false && !this.state.firstKeyWord) {
+      console.log("test");
+      return <Text style={{ "margin": 10, 'color': 'red' }}>Cannot find tag</Text>
+    }
   }
 
   showGif = (gif) => {
@@ -101,8 +117,8 @@ export default class App extends Component {
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
           <View style={styles.keywordOptions}>
-            <CircleButton name='check' color='#8BC34A' style={styles.option} onPress={this.handleConfirmKeyword}/>
-            <CircleButton name='refresh' color='#F44336' style={styles.option} onPress={this.handleRefreshKeyword}/>
+            <CircleButton name='check' color='green' style={styles.option} onPress={this.handleConfirmKeyword}/>
+            <CircleButton name='refresh' color='red' style={styles.option} onPress={this.handleRefreshKeyword}/>
           </View>
       </View>
       )
@@ -130,7 +146,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
             <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-            <Button color='#9933FF' title='Start New Game' onPress={this.handleStart}/>
+            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
@@ -148,6 +164,7 @@ export default class App extends Component {
               returnKeyType={'go'}
             />
             {this.showGif(this.state.gif)}
+            {this.showInvalidTag()}
           </View>
         </ScrollView>
       )
@@ -156,7 +173,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           <Text style={{ "margin": 10, 'color': 'white' }}>You win!</Text>
-          <Button color='#9933FF' title='Start New Game' onPress={this.newGame}/>
+          <Button color='white' title='Start New Game' onPress={this.newGame}/>
         </View>
       )
     }
