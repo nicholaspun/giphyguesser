@@ -7,7 +7,7 @@ let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
 const CircleButton = (props) => (
   <TouchableOpacity style={styles.circleButton} onPress={props.onPress}>
-    <Icon name={props.name} color={props.color}/>
+    <Icon name={props.name} size={30} color={props.color}/>
   </TouchableOpacity>
 )
 
@@ -79,16 +79,16 @@ export default class App extends Component {
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
           <View style={styles.keywordOptions}>
-            <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
-            <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
+            <CircleButton name='check' color='green' style={styles.option} onPress={this.handleConfirmKeyword}/>
+            <CircleButton name='refresh' color='red' style={styles.option} onPress={this.handleRefreshKeyword}/>
           </View>
       </View>
       )
     }
     else if (this.state.loading) {
       return (
-        <View style={{width:200, height: 200, alignItems: 'center', justifyContent: 'center'}}>
-            <ActivityIndicator animating={true}/>
+        <View style={styles.loading}>
+            <ActivityIndicator animating={true} color='white'/>
         </View>
       )
     }
@@ -107,20 +107,21 @@ export default class App extends Component {
     if (!this.state.playing) {
       return (
         <View style={styles.container}>
-          <Button title='Start New Game' onPress={this.handleStart}/>
+          <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
+          <Button color='white' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
     else if (!this.state.guessing && !this.state.correct) {
       return (
-        <ScrollView >
+        <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.container}>
             <TextInput
               placeholder='Enter a Keyword'
               placeholderTextColor='gray'
               value={this.state.keyword}
               onChangeText={this.handleKeyWordChange}
-              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              style={styles.textInput}
               onEndEditing={this.searchGif}
               returnKeyType={'go'}
             />
@@ -132,15 +133,15 @@ export default class App extends Component {
     else if (!this.state.guessing) {
       return (
         <View style={styles.container}>
-          <Text style={{ "margin": 10 }}>You are Correct!</Text>
-          <Button title='Start New Game' onPress={this.newGame}/>
+          <Text style={{ "margin": 10, 'color': 'white' }}>You win!</Text>
+          <Button color='white' title='Start New Game' onPress={this.newGame}/>
         </View>
       )
     }
     else {
       return (
         <View style={styles.container}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={styles.scrollView}>
             <View>
               <Image
                 source={{uri: this.state.gif.url}}
@@ -151,7 +152,7 @@ export default class App extends Component {
               placeholderTextColor='gray'
               value={this.state.guess}
               onChangeText={this.handleGuessChange}
-              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              style={styles.textInput}
               onEndEditing={this.validateGuess}
               returnKeyType={'go'}
             />
@@ -173,16 +174,38 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#212121',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   keywordOptions: {
     flexDirection: 'row',
     alignItems: 'center'
   },
   circleButton: {
-    padding: 8
+    margin: 8
+  },
+  textInput: {
+    width: 200,
+    height: 44,
+    color: 'white',
+    backgroundColor: '#121212',
+    padding: 8,
+    margin: 8,
+    borderColor: '#111',
+    borderWidth: 1
+  },
+  loading: {
+    width:200,
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  scrollView: {
+    flexGrow: 1,
+  },
+  option: {
+    flex: 1
   }
 });
 
