@@ -26,6 +26,7 @@ export default class App extends Component {
       guess: '',
       keyword: null,
       correct: false,
+      firstGuess: true,
     }
     this.searchGif = this.searchGif.bind(this)
   }
@@ -63,6 +64,12 @@ export default class App extends Component {
     let result = (this.state.guess.toLowerCase() === this.state.keyword.toLowerCase())
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
+    if (result === false) {
+      this.setState({guess: ''});
+    }
+    if (this.state.firstGuess) {
+      this.setState({firstGuess: false});
+    }
   }
 
   async searchGif() {
@@ -91,6 +98,15 @@ export default class App extends Component {
         <View style={styles.loading}>
             <ActivityIndicator animating={true} color='white'/>
         </View>
+      )
+    }
+  }
+
+  showWrongGuess = () => {
+    let first = this.state.firstGuess;
+    if (!this.state.correct && !first) {
+      return (
+        <Text style={{ "margin": 10, 'color': 'red' }}>You have guessed incorrectly!</Text>
       )
     }
   }
@@ -156,6 +172,7 @@ export default class App extends Component {
               onEndEditing={this.validateGuess}
               returnKeyType={'go'}
             />
+            {this.showWrongGuess()}
           </ScrollView>
         </View>
       )
