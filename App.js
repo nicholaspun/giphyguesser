@@ -53,7 +53,7 @@ export default class App extends Component {
   }
 
   newGame = () => {
-    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true, firstKeyWord: true, gifLst: false, guessesLeft: 5, pickerWin: false})
+    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true, firstKeyWord: true, gifLst: false, guessesLeft: 5, pickerWin: false, playing: false})
   }
 
   handleConfirmKeyword = () => {
@@ -79,7 +79,6 @@ export default class App extends Component {
   validateGuess = () => {
     // switching them all to avoid case sensitivity
     let result = (this.state.guess.toLowerCase() === this.state.keyword.toLowerCase())
-    console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
     if (result === false) {
       let newGuessesLeft = this.state.guessesLeft - 1;
@@ -96,7 +95,6 @@ export default class App extends Component {
   async searchGif() {
     this.setState({loading: true});
     let gifLst = await getImageURLfromTag(this.state.keyword);
-    console.log(gifLst);
     if (gifLst.length) {
       this.setState({gifLst: gifLst});
       this.setState({gif: gifLst[this.state.gifIndex].images.original, loading: false});
@@ -108,9 +106,7 @@ export default class App extends Component {
   }
 
   showInvalidTag = () => {
-    console.log(this.state.gifLst.length);
     if (this.state.gifLst === false && !this.state.firstKeyWord) {
-      console.log("test");
       return <Text style={{ "margin": 10, 'color': 'red' }}>Cannot find tag</Text>
     }
   }
@@ -191,7 +187,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           {this.showWinner()}
-          <Button color='white' title='Start New Game' onPress={this.newGame}/>
+          <Button color='white' title='Restart' onPress={this.newGame}/>
         </View>
       )
     }
