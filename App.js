@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Picker } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  TouchableHighlight
+} from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -10,6 +23,8 @@ const CircleButton = (props) => (
     <Icon name={props.name} size={30} color={props.color}/>
   </TouchableOpacity>
 )
+
+var {height, width} = Dimensions.get('window');
 
 export default class App extends Component {
   constructor() {
@@ -113,8 +128,8 @@ export default class App extends Component {
     if (!this.state.playing) {
       return (
         <View style={styles.container}>
-          <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-          <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+            <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
+            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
@@ -212,7 +227,7 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1
-  }
+  },
 });
 
 async function getImageURLfromTag(tags){
