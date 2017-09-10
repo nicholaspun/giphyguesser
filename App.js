@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Picker } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Picker,
+  Dimensions,
+  TouchableHighlight
+} from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -11,6 +25,8 @@ const CircleButton = (props) => (
   </TouchableOpacity>
 )
 
+var {height, width} = Dimensions.get('window');
+
 export default class App extends Component {
   constructor() {
     super();
@@ -18,6 +34,7 @@ export default class App extends Component {
       playing: false,
       loading: false,
       guessing: false,
+      showPicker: false,
       gif: false,
       gifLst: false,
       gifIndex: 0,
@@ -111,20 +128,73 @@ export default class App extends Component {
     }
   }
 
-  viewSwitcher = () => {
-    if (!this.state.playing) {
+  togglePicker = () => {
+    this.setState({showPicker: !this.state.showPicker})
+  }
+
+  showPicker = () => {
+    if (this.state.showPicker) {
       return (
-        <View style={styles.container}>
-          <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-          <Picker value={this.state.numberOfPlayers}
-             onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
+        <View>
+          <Picker selectedValue={this.state.numberOfPlayers}
+                  onValueChange={(itemValue, itemIndex) => {this.setState({numberOfPlayers: itemValue}); this.togglePicker();}}
+                  style={styles.picker}>
               <Picker.Item label="2" value={2} />
               <Picker.Item label="3" value={3} />
               <Picker.Item label="4" value={4} />
               <Picker.Item label="5" value={5} />
               <Picker.Item label="6" value={6} />
           </Picker>
-          <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+        </View>
+      )
+    }
+  }
+
+  handlePlayerNameChange = (name, i) => {
+    let playerNamesCopy = this.state.playerNames;
+    playerNamesCopy[i] = name;
+    this.setState({playerNames: playerNamesCopy});
+  }
+
+  nameList = () => {
+    let inputs = [];
+    for (var i = 0; i < this.state.numberOfPlayers; i++) {
+      this.state.playerNames.push('');
+      inputs.push(
+        <TextInput
+          key={i}
+          placeholder={'Player ' + (i + 1)}
+          placeholderTextColor='gray'
+          value={this.state.playerNames[i]}
+          onChangeText={(i) => this.handlePlayerNameChange(i)}
+          style={styles.textInput}
+          returnKeyType={'done'}
+        />
+      )
+    }
+    return (
+      <View>
+        {inputs}
+      </View>
+    )
+  }
+
+  viewSwitcher = () => {
+    if (!this.state.playing) {
+      return (
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
+            <TouchableHighlight onPress={this.togglePicker}>
+              <Text style={{color: 'white', margin: 16, fontSize: 18}} >
+                Number of Players:
+                {this.state.numberOfPlayers}
+              </Text>
+            </TouchableHighlight>
+            {this.nameList()}
+            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+          </ScrollView>
+          {this.showPicker()}
         </View>
       )
     }
@@ -222,6 +292,10 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1
+  },
+  picker: {
+    width: width,
+    backgroundColor: 'white',
   }
 });
 
