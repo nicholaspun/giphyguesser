@@ -102,6 +102,7 @@ export default class App extends Component {
     else if (!this.state.guessing && !this.state.correct) {
       return (
         <ScrollView >
+
           <View style={styles.container}>
             <TextInput
               placeholder='Enter a Keyword'
@@ -162,7 +163,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#222',
     alignItems: 'center',
     justifyContent: 'center',
   },
