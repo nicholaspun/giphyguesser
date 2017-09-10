@@ -100,8 +100,8 @@ export default class App extends Component {
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
           <View style={styles.keywordOptions}>
-            <CircleButton name='check' color='green' style={styles.option} onPress={this.handleConfirmKeyword}/>
-            <CircleButton name='refresh' color='red' style={styles.option} onPress={this.handleRefreshKeyword}/>
+            <CircleButton name='check' color='#8BC34A' style={styles.option} onPress={this.handleConfirmKeyword}/>
+            <CircleButton name='refresh' color='#F44336' style={styles.option} onPress={this.handleRefreshKeyword}/>
           </View>
       </View>
       )
@@ -129,7 +129,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
             <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+            <Button color='#9933FF' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
@@ -155,7 +155,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           <Text style={{ "margin": 10, 'color': 'white' }}>You win!</Text>
-          <Button color='white' title='Start New Game' onPress={this.newGame}/>
+          <Button color='#9933FF' title='Start New Game' onPress={this.newGame}/>
         </View>
       )
     }
