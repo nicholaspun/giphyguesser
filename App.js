@@ -84,7 +84,7 @@ export default class App extends Component {
     }
     else if (this.state.loading) {
       return (
-        <View style={{width:200, height: 200, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.loading}>
             <ActivityIndicator animating={true}/>
         </View>
       )
@@ -109,7 +109,7 @@ export default class App extends Component {
               placeholderTextColor='gray'
               value={this.state.keyword}
               onChangeText={this.handleKeyWordChange}
-              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              style={styles.textInput}
               onEndEditing={this.searchGif}
               returnKeyType={'go'}
             />
@@ -144,7 +144,7 @@ export default class App extends Component {
               placeholderTextColor='gray'
               value={this.state.guess}
               onChangeText={this.handleGuessChange}
-              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              style={styles.textInput}
               onEndEditing={this.validateGuess}
               returnKeyType={'go'}
             />
@@ -175,6 +175,20 @@ const styles = StyleSheet.create({
   },
   circleButton: {
     padding: 8
+  },
+  textInput: {
+    width: 200,
+    height: 44,
+    color: 'white',
+    padding: 8,
+    borderColor: 'lightgray',
+    borderWidth: 1
+  },
+  loading: {
+    width:200,
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
