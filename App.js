@@ -133,20 +133,22 @@ export default class App extends Component {
     else {
       return (
         <View style={styles.container}>
-          <View>
-            <Image
-              source={{uri: this.state.gif.url}}
-              style={{width: 200, height: 200}}/>
-          </View>
-          <TextInput
-            placeholder='Enter your guess'
-            placeholderTextColor='gray'
-            value={this.state.guess}
-            onChangeText={this.handleGuessChange}
-            style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
-            onEndEditing={this.validateGuess}
-            returnKeyType={'go'}
-          />
+          <ScrollView>
+            <View>
+              <Image
+                source={{uri: this.state.gif.url}}
+                style={{width: 200, height: 200}}/>
+            </View>
+            <TextInput
+              placeholder='Enter your guess'
+              placeholderTextColor='gray'
+              value={this.state.guess}
+              onChangeText={this.handleGuessChange}
+              style={{ width: 200, height: 44, padding: 8, borderColor: 'gray', borderWidth: 1}}
+              onEndEditing={this.validateGuess}
+              returnKeyType={'go'}
+            />
+          </ScrollView>
         </View>
       )
     }
