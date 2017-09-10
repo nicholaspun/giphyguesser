@@ -24,14 +24,7 @@ export default class App extends Component {
       keyword: null,
       correct: false,
     }
-    this.handleStart = this.handleStart.bind(this)
-    this.handleKeyWordChange = this.handleKeyWordChange.bind(this)
     this.searchGif = this.searchGif.bind(this)
-    this.handleConfirmKeyword = this.handleConfirmKeyword.bind(this)
-    this.handleRefreshKeyword = this.handleRefreshKeyword.bind(this)
-    this.validateGuess = this.validateGuess.bind(this)
-    this.handleGuessChange = this.handleGuessChange.bind(this)
-    this.searchGif = this.searchGif.bind(this);
   }
 
   handleStart = () => {
@@ -46,7 +39,7 @@ export default class App extends Component {
     this.setState({guessing: true})
   }
 
-  handleRefreshKeyword() {
+  handleRefreshKeyword = () => {
     let nextIndex = this.state.gifIndex + 1;
     if (nextIndex >= this.state.gifLst.length) {
       nextIndex = 0;
@@ -75,7 +68,7 @@ export default class App extends Component {
     this.setState({gif: gifLst[this.state.gifIndex].images.original});
   }
 
-  showGif(gif) {
+  showGif(gif) => {
     if (gif) {
     return(
       <View>
