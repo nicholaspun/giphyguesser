@@ -75,7 +75,7 @@ export default class App extends Component {
       <View>
         <Image
           source={{uri: gif.url}}
-          style={{width: Number(gif.width), height: Number(gif.height)}}/>
+          style={{width: 200, height: 200}}/>
       </View>
       )
     }
@@ -112,7 +112,7 @@ export default class App extends Component {
     else if (!this.state.guessing) {
       return (
         <View style={styles.container}>
-          <Text style={{ "margin": 10 }}>You're Correct!</Text>
+          <Text style={{ "margin": 10 }}>You are Correct!</Text>
           <Button title='Start New Game' onPress={this.newGame}/>
         </View>
       )
