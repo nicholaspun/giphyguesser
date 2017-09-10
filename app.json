@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "giphyguesser",
-    "description": "An empty new project",
+    "description": "Have a chuckle with friends while playing with GIFs by GIPHY",
     "slug": "giphyguesser",
     "privacy": "public",
     "sdkVersion": "20.0.0",
