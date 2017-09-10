@@ -42,6 +42,8 @@ export default class App extends Component {
       correct: false,
       firstGuess: true,
       firstKeyWord: true,
+      guessesLeft: 5,
+      pickerWin: false,
     }
     this.searchGif = this.searchGif.bind(this)
   }
@@ -51,7 +53,7 @@ export default class App extends Component {
   }
 
   newGame = () => {
-    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true, firstKeyWord: true, gifLst: false})
+    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true, firstKeyWord: true, gifLst: false, guessesLeft: 5, pickerWin: false})
   }
 
   handleConfirmKeyword = () => {
@@ -80,7 +82,11 @@ export default class App extends Component {
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
     if (result === false) {
-      this.setState({guess: ''});
+      let newGuessesLeft = this.state.guessesLeft - 1;
+      this.setState({guess: '', guessesLeft: newGuessesLeft});
+      if (newGuessesLeft <= 0) {
+        this.setState({pickerWin: true, guessing: false, correct: true});
+      }
     }
     if (this.state.firstGuess) {
       this.setState({firstGuess: false});
@@ -141,6 +147,15 @@ export default class App extends Component {
     }
   }
 
+  showWinner = () => {
+    if (this.state.pickerWin) {
+      return <Text style={{ "margin": 10, 'color': 'white', 'fontSize': 36}}>Tag Setter Wins!</Text>
+    }
+    else {
+      return <Text style={{ "margin": 10, 'color': 'white', 'fontSize': 36}}>Tag Guessers Win!</Text>
+    }
+  }
+
   viewSwitcher = () => {
     if (!this.state.playing) {
       return (
@@ -152,27 +167,30 @@ export default class App extends Component {
     }
     else if (!this.state.guessing && !this.state.correct) {
       return (
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.container}>
-            <TextInput
-              placeholder='Enter a Keyword'
-              placeholderTextColor='gray'
-              value={this.state.keyword}
-              onChangeText={this.handleKeyWordChange}
-              style={styles.textInput}
-              onEndEditing={this.searchGif}
-              returnKeyType={'go'}
-            />
-            {this.showGif(this.state.gif)}
-            {this.showInvalidTag()}
-          </View>
-        </ScrollView>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <View style={styles.container}>
+              <Text style={{ "margin": 30, 'color': 'white' }}>   Start by having the first player enter a tag for a gif, then pass the device to the other players who have 5 tries to guess the tag.</Text>
+              <TextInput
+                placeholder='Enter a Keyword'
+                placeholderTextColor='gray'
+                value={this.state.keyword}
+                onChangeText={this.handleKeyWordChange}
+                style={styles.textInput}
+                onEndEditing={this.searchGif}
+                returnKeyType={'go'}
+              />
+              {this.showGif(this.state.gif)}
+              {this.showInvalidTag()}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )
     }
     else if (!this.state.guessing) {
       return (
         <View style={styles.container}>
-          <Text style={{ "margin": 10, 'color': 'white' }}>You win!</Text>
+          {this.showWinner()}
           <Button color='white' title='Start New Game' onPress={this.newGame}/>
         </View>
       )
@@ -182,21 +200,21 @@ export default class App extends Component {
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           <ScrollView contentContainerStyle={styles.scrollView}>
             <View style={styles.container}>
-              <View>
-                <Image
-                  source={{uri: this.state.gif.url}}
-                  style={{width: 200, height: 200, padding: 8, margin: 8}}/>
-                <TextInput
-                  placeholder='Enter your guess'
-                  placeholderTextColor='gray'
-                  value={this.state.guess}
-                  onChangeText={this.handleGuessChange}
-                  style={styles.textInput}
-                  onEndEditing={this.validateGuess}
-                  returnKeyType={'go'}
-                />
-              </View>
+              <Text style={{ 'color': 'white', 'fontSize': 20 }}>Guesses Remaining: {this.state.guessesLeft}</Text>
+              <Image
+                source={{uri: this.state.gif.url}}
+                style={{width: 200, height: 200, padding: 8, margin: 8}}/>
+              <TextInput
+                placeholder='Enter your guess'
+                placeholderTextColor='gray'
+                value={this.state.guess}
+                onChangeText={this.handleGuessChange}
+                style={styles.textInput}
+                onEndEditing={this.validateGuess}
+                returnKeyType={'go'}
+              />
               {this.showWrongGuess()}
+              <Button color='white' title='Restart' onPress={this.newGame} style={{margin: 25}}/>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
