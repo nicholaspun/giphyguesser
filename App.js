@@ -11,8 +11,6 @@ const CircleButton = (props) => (
   </TouchableOpacity>
 )
 
-
-
 export default class App extends Component {
   constructor() {
     super();
@@ -79,6 +77,10 @@ export default class App extends Component {
         <Image
           source={{uri: gif.url}}
           style={{width: 200, height: 200}}/>
+          <View style={styles.keywordOptions}>
+            <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
+            <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
+          </View>
       </View>
       )
     }
@@ -114,10 +116,6 @@ export default class App extends Component {
               returnKeyType={'go'}
             />
             {this.showGif(this.state.gif)}
-            <View style={styles.keywordOptions}>
-              <CircleButton name='check' color='green' onPress={this.handleConfirmKeyword}/>
-              <CircleButton name='refresh' color='red' onPress={this.handleRefreshKeyword}/>
-            </View>
           </View>
         </ScrollView>
       )
