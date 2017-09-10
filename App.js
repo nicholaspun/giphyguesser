@@ -57,7 +57,8 @@ export default class App extends Component {
   }
 
   validateGuess = () => {
-    let result = (this.state.guess === this.state.keyword)
+    // switching them all to avoid case sensitivity
+    let result = (this.state.guess.toLowerCase === this.state.keyword.toLowerCase)
     console.log(this.state.guess, this.state.keyword, result)
     this.setState({guessing: !result, correct: result})
   }
@@ -68,7 +69,7 @@ export default class App extends Component {
     this.setState({gif: gifLst[this.state.gifIndex].images.original});
   }
 
-  showGif(gif) => {
+  showGif = (gif) => {
     if (gif) {
     return(
       <View>
