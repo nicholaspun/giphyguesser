@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Picker } from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -21,6 +21,8 @@ export default class App extends Component {
       gif: false,
       gifLst: false,
       gifIndex: 0,
+      numberOfPlayers: 2,
+      playerNames: [],
       guess: '',
       keyword: null,
       correct: false,
@@ -98,6 +100,14 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
+          <Picker value={this.state.numberOfPlayers}
+             onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
+              <Picker.Item label="2" value={2} />
+              <Picker.Item label="3" value={3} />
+              <Picker.Item label="4" value={4} />
+              <Picker.Item label="5" value={5} />
+              <Picker.Item label="6" value={6} />
+          </Picker>
           <Button color='white' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
