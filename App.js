@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Picker } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  TouchableHighlight,
+  KeyboardAvoidingView
+} from 'react-native';
 
 let API_KEY = "1da9e73147fd49008bd755b144fab994";
 
@@ -10,6 +24,8 @@ const CircleButton = (props) => (
     <Icon name={props.name} size={30} color={props.color}/>
   </TouchableOpacity>
 )
+
+var {height, width} = Dimensions.get('window');
 
 export default class App extends Component {
   constructor() {
@@ -34,7 +50,7 @@ export default class App extends Component {
   }
 
   newGame = () => {
-    this.setState({guessing: false, correct: false, keyword: null, gif: false})
+    this.setState({guessing: false, correct: false, keyword: null, gif: false, guess: '', firstGuess: true})
   }
 
   handleConfirmKeyword = () => {
@@ -113,8 +129,8 @@ export default class App extends Component {
     if (!this.state.playing) {
       return (
         <View style={styles.container}>
-          <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
-          <Button color='white' title='Start New Game' onPress={this.handleStart}/>
+            <Image source={require('./assets/header.png')} resizeMode='contain' style={{width: 300, height: 100, margin: 16}}/>
+            <Button color='white' title='Start New Game' onPress={this.handleStart}/>
         </View>
       )
     }
@@ -146,25 +162,27 @@ export default class App extends Component {
     }
     else {
       return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <View>
-              <Image
-                source={{uri: this.state.gif.url}}
-                style={{width: 200, height: 200}}/>
+            <View style={styles.container}>
+              <View>
+                <Image
+                  source={{uri: this.state.gif.url}}
+                  style={{width: 200, height: 200, padding: 8, margin: 8}}/>
+                <TextInput
+                  placeholder='Enter your guess'
+                  placeholderTextColor='gray'
+                  value={this.state.guess}
+                  onChangeText={this.handleGuessChange}
+                  style={styles.textInput}
+                  onEndEditing={this.validateGuess}
+                  returnKeyType={'go'}
+                />
+              </View>
+              {this.showWrongGuess()}
             </View>
-            <TextInput
-              placeholder='Enter your guess'
-              placeholderTextColor='gray'
-              value={this.state.guess}
-              onChangeText={this.handleGuessChange}
-              style={styles.textInput}
-              onEndEditing={this.validateGuess}
-              returnKeyType={'go'}
-            />
-            {this.showWrongGuess()}
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       )
     }
   }
@@ -212,7 +230,7 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1
-  }
+  },
 });
 
 async function getImageURLfromTag(tags){
