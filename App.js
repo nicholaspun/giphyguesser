@@ -123,7 +123,7 @@ export default class App extends Component {
           <View>
             <Image
               source={{uri: this.state.gif.url}}
-              style={{width: Number(this.state.gif.width), height: Number(this.state.gif.height)}}/>
+              style={{width: 200, height: 200}}/>
           </View>
           <TextInput
             placeholder='Enter your guess'
